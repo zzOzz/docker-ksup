@@ -1,0 +1,35 @@
+ksup:
+  hostname: ksup
+  domainname: ad.universite-lyon.fr
+  build: .
+  command: /bin/sh -e /usr/local/bin/run
+  environment:
+    VIRTUAL_HOST: ksup6.universite-lyon.fr
+    VIRTUAL_PROTO: https
+    WEBAPP_STORAGE: /storage/
+    WEBAPP_NAME: "Site Web KSUP6"
+    WEBAPP_HOST: ksup6.universite-lyon.fr
+    WEBAPP_PORT: 443
+    SMTP_HOST: localhost
+    SMTP_PORT: 25
+    MAIL_FROM: no_reply@localhost
+    MAIL_WEBMASTER: webmaster@localhost
+    BD: ksup6
+    BD_HOST: mysql
+    BD_LOGIN: ksup
+    BD_PASSWORD: ksup_pass
+    TOMCAT_ADMIN_USER: admin
+    TOMCAT_ADMIN_PASSWORD: tomcat_supersecret
+  ports:
+    - "443"
+  links:
+    - mysql
+mysql:
+  hostname: mysql
+  domainname: ad.universite-lyon.fr
+  image: mysql
+  environment:
+    MYSQL_ROOT_PASSWORD: supersecret
+    MYSQL_DATABASE: ksup6
+    MYSQL_USER: ksup
+    MYSQL_PASSWORD: ksup_pass
