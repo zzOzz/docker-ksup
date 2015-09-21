@@ -33,3 +33,14 @@ mysql:
     MYSQL_DATABASE: ksup6
     MYSQL_USER: ksup
     MYSQL_PASSWORD: ksup_pass
+nginx:
+  environment:
+    DEFAULT_HOST: local.dev
+  ports:
+    - "80:80"
+    - "443:443"
+  volumes:
+    - /var/run/docker.sock:/tmp/docker.sock
+    - /Users/vincent/Documents/UDL/Admin/wildcard_universite:/etc/nginx/certs
+#    - ./conf/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro
+  image: jwilder/nginx-proxy

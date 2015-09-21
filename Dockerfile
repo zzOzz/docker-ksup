@@ -50,9 +50,16 @@ ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64/jre/
 #RUN (keytool -import -trustcacerts -alias ca-cert -file /etc/ssl/certs/java/CERT-CA.cer -keystore /etc/ssl/certs/java/cacerts -storepass changeit -noprompt)
 RUN (keytool -genkeypair -alias tomcat -keyalg RSA -storepass changeit -dname "CN=tomcat, C=fr" -keypass changeit -noprompt)
 
+
+#exntesnion
+#RUN wget http://download.k-sup.org/repository/kosmos.public.archiva/fr/kosmos/web/extensions/uas/2.02.03/uas-2.02.03.war -O /tmp/uas.war
+#RUN cd /opt/tomcat/webapps/ROOT/extensions/;mkdir uas;cd uas;unzip /tmp/uas.war
+
+
 ADD conf/install.sql /tmp/install.sql
 ADD storage /storage
 RUN rm -fr /opt/tomcat/webapps/ROOT
+ADD ROOT.war /opt/tomcat/webapps/ROOT.war
 EXPOSE 443
 VOLUME /storage
 CMD ["/bin/sh", "-e", "/usr/local/bin/run"]

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd ">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>fr.universite-lyon</groupId>
+  <artifactId>ksup-war</artifactId>
+  <packaging>pom</packaging>
+  <version>6.02.03</version>
+  <modules>
+    <!-- <module>extensions/accueil/</module> -->
+    <module>ksup</module>
+  </modules>
+  <!-- <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <warName>ROOT</warName>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build> -->
+  <repositories>
+    <repository>
+      <id>kosmos.public.archiva</id>
+      <name>Archiva public kosmos</name>
+      <url>http://download.k-sup.org/repository/kosmos.public.archiva/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+    <pluginRepositories>
+    <pluginRepository>
+      <id>kosmos.public.archiva</id>
+      <name>Archiva public kosmos</name>
+      <url>http://download.k-sup.org/repository/kosmos.public.archiva/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+</project>
