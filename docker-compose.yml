@@ -41,6 +41,6 @@ nginx:
     - "443:443"
   volumes:
     - /var/run/docker.sock:/tmp/docker.sock
-    - /Users/vincent/Documents/UDL/Admin/wildcard_universite:/etc/nginx/certs
+    - "/Users/vincent/Nuxeo Drive UDL/Vincent Lombard/UDL/admin/wildcard_universite/:/etc/nginx/certs"
 #    - ./conf/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro
-  image: jwilder/nginx-proxy
+  image: v20100/nginx-proxy

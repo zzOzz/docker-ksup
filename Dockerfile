@@ -1,65 +1,46 @@
 FROM java:7
-
 # Set the locale
-
-RUN apt-get -qq update
-RUN apt-get upgrade -y
-RUN apt-get install -y libtcnative-1 locales vim mysql-client
-RUN locale-gen fr_FR.UTF-8
-RUN (echo "set locales/locales_to_be_generated fr_FR.UTF-8 UTF-8" |debconf-communicate)
-RUN (echo "set locales/default_environment_locale fr_FR.UTF-8" |debconf-communicate)
 ENV LANG fr_FR.UTF-8
-#ENV LANGUAGE fr_FR:fr
+ENV LANGUAGE fr_FR:fr
 ENV LC_ALL fr_FR.UTF-8
-
+ENV TOMCAT_MAJOR 8
+ENV TOMCAT_VERSION 8.0.33
+ENV TOMCAT_TGZ_URL https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
+ENV KSUP_VER=6.04.09
+ENV KSUP_URL=http://repo.maven.ksup.org/nexus/service/local/repositories/releases/content/fr/kosmos/web/produit/ksup/$KSUP_VER/ksup-$KSUP_VER.war
+ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64/jre/
 #TOMCAT & KSUP
-RUN (wget -O /tmp/tomcat7.tar.gz http://mirror.cogentco.com/pub/apache/tomcat/tomcat-7/v7.0.64/bin/apache-tomcat-7.0.64.tar.gz && \
-	cd /opt && \
-	tar zxf /tmp/tomcat7.tar.gz && \
-	mv /opt/apache-tomcat* /opt/tomcat && \
-  rm -fr /opt/tomcat/webapps/examples &&\
-  rm -fr /opt/tomcat/webapps/docs &&\
-	rm /tmp/tomcat7.tar.gz &&\
-	cd /opt/tomcat/webapps/ && \
-	wget -O ROOT.war http://download.k-sup.org/repository/kosmos.public.archiva/fr/kosmos/web/produit/ksup/6.02.03/ksup-6.02.03.war \
-	)
-
-#Lib Ksup
-RUN (wget http://doc.k-sup.org/medias/fichier/tomcat-conf_1372942847873-zip?INLINE=FALSE -O /tmp/lib.zip && \
-	cd /tmp;unzip /tmp/lib.zip && \
-	mv /tmp/lib/* /opt/tomcat/lib/ && \
-	chown -R www-data:www-data /opt/tomcat/ \
-	)
-
-RUN apt-get install -y git
+RUN set -x \
+	\
+	&& apt-get -qq update \
+	&& apt-get upgrade -y \
+	&& apt-get install -y libtcnative-1 locales vim mysql-client git \
+	&& locale-gen fr_FR.UTF-8 \
+	&& (echo "set locales/locales_to_be_generated fr_FR.UTF-8 UTF-8" |debconf-communicate) \
+	&& (echo "set locales/default_environment_locale fr_FR.UTF-8" |debconf-communicate) \
+	&& wget -O /tmp/tomcat.tar.gz $TOMCAT_TGZ_URL \
+	&& cd /opt  \
+	&& tar zxf /tmp/tomcat.tar.gz  \
+	&& mv /opt/apache-tomcat* /opt/tomcat  \
+  && rm -fr /opt/tomcat/webapps/examples \
+  && rm -fr /opt/tomcat/webapps/docs \
+	&& rm /tmp/tomcat.tar.gz \
+	&& cd /opt/tomcat/webapps/  \
+	&& rm -fr /opt/tomcat/webapps/ROOT \
+	&& wget -O ROOT.war $KSUP_URL \
+	&& mkdir -p /storage/{conf,fichiergw,imports,logs,medias,save,sessions,textsearch} \
+	&& (keytool -genkeypair -alias tomcat -keyalg RSA -storepass changeit -dname "CN=tomcat, C=fr" -keypass changeit -noprompt)
 ADD conf/run.sh /usr/local/bin/run
-
-RUN mkdir -p /storage/{conf,fichiergw,imports,logs,medias,save,sessions,textsearch}
-
 #Template with mustache mo
 ADD mo /tmp/mo
-ADD conf/server.tmpl /opt/tomcat/conf/server.tmpl
+ADD conf/server$TOMCAT_MAJOR.tmpl /opt/tomcat/conf/server.tmpl
 ADD conf/env.properties.tmpl /storage/conf/env.properties.tmpl
-ADD conf/ROOT.xml.tmpl /opt/tomcat/conf/ROOT.xml.tmpl
-#RUN cat /opt/tomcat/conf/server.tmpl |/tmp/mo >/opt/tomcat/conf/server.xml
-
-
-ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64/jre/
-#ADD ./conf/CERT-CA.cer /etc/ssl/certs/java/CERT-CA.cer
-
-#RUN (keytool -import -trustcacerts -alias ca-cert -file /etc/ssl/certs/java/CERT-CA.cer -keystore /etc/ssl/certs/java/cacerts -storepass changeit -noprompt)
-RUN (keytool -genkeypair -alias tomcat -keyalg RSA -storepass changeit -dname "CN=tomcat, C=fr" -keypass changeit -noprompt)
-
-
-#exntesnion
-#RUN wget http://download.k-sup.org/repository/kosmos.public.archiva/fr/kosmos/web/extensions/uas/2.02.03/uas-2.02.03.war -O /tmp/uas.war
-#RUN cd /opt/tomcat/webapps/ROOT/extensions/;mkdir uas;cd uas;unzip /tmp/uas.war
-
-
+ADD conf/ROOT$TOMCAT_MAJOR.xml.tmpl /opt/tomcat/conf/ROOT.xml.tmpl
+#SQL init
 ADD conf/install.sql /tmp/install.sql
+#Images médiatheque
 ADD storage /storage
-RUN rm -fr /opt/tomcat/webapps/ROOT
-ADD ROOT.war /opt/tomcat/webapps/ROOT.war
+
 EXPOSE 443
 VOLUME /storage
 CMD ["/bin/sh", "-e", "/usr/local/bin/run"]

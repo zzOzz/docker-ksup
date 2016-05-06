@@ -4,7 +4,7 @@
   <groupId>fr.universite-lyon</groupId>
   <artifactId>ksup-war</artifactId>
   <packaging>pom</packaging>
-  <version>6.02.03</version>
+  <version>6.04.09</version>
   <modules>
     <!-- <module>extensions/accueil/</module> -->
     <module>ksup</module>
@@ -20,6 +20,50 @@
     </plugins>
   </build> -->
   <repositories>
+	<repository>
+		<id>releases</id>
+		<url>http://repo.maven.ksup.org/content/repositories/releases</url>
+		<releases>
+			<enabled>true</enabled>
+		</releases>
+		<snapshots>
+		        <enabled>false</enabled>
+		</snapshots>
+	</repository>
+	<repository>
+		<id>extensions-communautaires.releases</id>
+		<url>http://repo.maven.ksup.org/content/repositories/extensions-communautaires.releases</url>
+		<releases>
+			<enabled>true</enabled>
+		</releases>
+		<snapshots>
+			<enabled>false</enabled>
+		</snapshots>
+	</repository>
+</repositories>
+<pluginRepositories>
+	<pluginRepository>
+		<id>releases</id>
+		<url>http://repo.maven.ksup.org/content/repositories/releases</url>
+		<releases>
+			<enabled>true</enabled>
+		</releases>
+		<snapshots>
+			<enabled>false</enabled>
+		</snapshots>
+	</pluginRepository>
+	<pluginRepository>
+		<id>extensions-communautaires.releases</id>
+		<url>http://repo.maven.ksup.org/content/repositories/extensions-communautaires.releases</url>
+		<releases>
+			<enabled>true</enabled>
+		</releases>
+		<snapshots>
+			<enabled>false</enabled>
+		</snapshots>
+        </pluginRepository>
+</pluginRepositories>
+  <!-- <repositories>
     <repository>
       <id>kosmos.public.archiva</id>
       <name>Archiva public kosmos</name>
@@ -44,5 +88,5 @@
         <enabled>true</enabled>
       </snapshots>
     </pluginRepository>
-  </pluginRepositories>
+  </pluginRepositories> -->
 </project>
